@@ -1,0 +1,117 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<input type="hidden" id="hiddenToken" />
+<div style="padding-top: 10px; height: 495px;" class="container">
+    <input type="button"style="scrollbar-base-color:cornflowerblue" ID="btnAddDoctor" value="Add Doctor" data-toggle="modal" data-target="#addDoctorDetails" class="btn btn-outline-primary" />
+    <br />
+
+    <table id="tableDoctor" style="width:1140px" class="display">
+        <thead>
+            <tr>
+                <th>Doctor ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Related Hospital</th>
+                <th>Specialty</th>
+                <th>Adddress</th>
+                <th>Primary Contact</th>
+                <th>Secondary Contact</th>
+                <th>Primary Mark</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+
+    </table>
+</div>
+@section customscripts{
+    <script src="~/Doctor.js" type="text/javascript"></script>
+}
+<link href="~/Hospital.css" rel="stylesheet" />
+
+<div class="modal fade" style="display:none" id="addDoctorDetails" role="dialog">
+    <div class="modal-dialog dialogPosition">
+        <!-- Modal content-->
+        <div class="modal-content" style="background-color: aliceblue">
+            <div class="modal-header" style="text-align: center">
+                <h3><b>New Doctor Details</b></h3>
+            </div>
+            <div class="modal-body modalBodyPadding">
+                <!-- Form for Taking Details -->
+                <div class="form-group " id="idDoctorIDDiv">
+                    <label for="fName">Doctor ID:</label>
+                    @Html.TextBox("txtDoctorID", "", new { @class = "form-control inputMaxWidth" })
+                </div>
+                <div class="form-group ">
+                    <label for="fName">First Name:</label>
+                    @Html.TextBox("txtFirstName", "", new { @class = "form-control inputMaxWidth" })
+                </div>
+
+                <div class="form-group ">
+                    <label for="lName">Last Name:</label>
+                    @Html.TextBox("txtLastName", "", new { @class = "form-control inputMaxWidth" })
+                </div>
+                <div class="form-group ">
+                    <label for="email">Email:</label>
+                    @Html.TextBox("txtEmail", "", new { @class = "form-control inputMaxWidth" })
+                </div>
+                <!--Related Hospital-->
+                @Html.Partial("HospitalDropdown")
+
+                <!--Specialty-->
+                @Html.Partial("Specialty")
+
+                <div class="form-group ">
+                    <label for="lName">Address:</label>
+                    @Html.TextBox("txtAddress", "", new { @class = "form-control inputMaxWidth" })
+                </div>              
+                <div class="form-group ">
+                    <label for="primaryNumber">Primary Contact:</label>
+                    @Html.TextBox("txtContact1", "", new { @class = "form-control inputMaxWidth" })
+                </div>
+                <div class="form-group ">
+                    <label for="contactNumber">Secondary Contact:</label>
+                    @Html.TextBox("txtContact2", "", new { @class = "form-control inputMaxWidth" })
+                </div>
+                <div class="form-group ">
+                    <label for="primaryMark">Primary Mark:</label>
+                    @Html.DropDownList("ddlPrimaryMark", new List<SelectListItem>
+                        {
+                        new SelectListItem{Text = "--select primary mark--",Value=""},
+                        new SelectListItem {Text = "Yes", Value="Yes"  },
+                        new SelectListItem {Text = "No", Value="No" }
+                        }, new { @class = "form-control inputMaxWidth" })
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input type="submit" id="bthSubmitDoctor" value="Add New" data-dismiss="modal" class="btn btn-primary " />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteDoctorDetails" role="dialog">
+    <div class="modal-dialog dialogPosition">
+        <!-- Modal content-->
+        <div class="modal-content" style="background-color: aliceblue">
+            <div class="modal-header">
+                <h3><b>Are you sure to Delete?</b></h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input type="button" id="btnDeleteDoctor" class="btn btn-default" data-dismiss="modal" value="Yes" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var encryptedToken = '@HttpContext.Current.Request.Cookies["LoggedUserToken"].Value';
+    $("#hiddenToken").val(encryptedToken);
+</script>

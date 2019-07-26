@@ -1,0 +1,188 @@
+﻿
+@{
+    ViewBag.Title = "UserDashBoard";
+}
+<link href="~/UserInfoCss.css" rel="stylesheet" />
+<div align="center">
+    <img src="@Session["imgURL"]", item.ModelImagePath))" style="top:10px ;border-radius:60px;width:125px;height:125px"/>
+</div>
+<div >
+    <table class="table table-striped" align="center" style="height: 300px; width: 80%; color: #38acff; font-size: large">
+        <tr>
+            <td style="width: 364px">
+                &nbsp;
+                User ID:
+            </td>
+            <td id="tdUserID" runat="server" style="width: 332px">
+                &nbsp;
+                @ViewBag.Session.userId
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 364px">
+                &nbsp;
+                First Name:
+            </td>
+            <td id="tdFirstName" runat="server" style="width: 332px">
+                &nbsp;
+                @ViewBag.Session.firstName
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 364px">
+                &nbsp;
+                Last Name:
+            </td>
+            <td id="tdLastName" runat="server" style="width: 332px">&nbsp;
+                @ViewBag.Session.lastName
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 364px">
+                &nbsp;
+                Email:
+            </td>
+            <td id="tdEmail" runat="server" style="width: 332px">
+                &nbsp;
+                @ViewBag.Session.email
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 364px">
+                &nbsp;
+                Address:
+            </td>
+            <td id="tdAddress" runat="server" style="width: 332px">
+                &nbsp;
+                @Session["Address"]
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 364px">
+                &nbsp;
+                Phone Number:
+            </td>
+            <td id="tdPhoneNumber" runat="server" style="width: 332px">
+                &nbsp;
+                @Session["Contact"]
+            </td>
+        </tr>
+    </table>
+    
+</div>
+<script type="text/javascript">
+    function update()
+    {
+        $("#txtFirstName").val('@ViewBag.Session.firstName');
+        $("#txtLastName").val('@ViewBag.Session.lastName');
+        $("#txtAddress").val('@Session["Address"].ToString()');
+        $("#txtContact").val('@Session["Contact"].ToString()');
+    }
+</script>
+
+
+<div style="width: 100%;padding-left: 10%;">
+    <input class="buttonStyle" type="button" id="btnUpdateInformation" onclick="update()" value="Update Information" data-toggle="modal" data-target="#dataUpdateModal" />
+    <input class="buttonStyle" type="button" id="btnUpdateInformation" value="Update Profile" data-toggle="modal" data-target="#updateProfileModal" />
+    <input class="buttonStyle" type="button" id="btnUpdateInformation" value="Update Password" data-toggle="modal" data-target="#updatePasswordModal" />
+</div>
+
+<!--Modal for updating User Information-->
+
+@using (Html.BeginForm("UpdateUserInformation", "Profile", FormMethod.Post))
+{
+    <div class="modal fade" style="display:none" id="dataUpdateModal" role="dialog">
+        <div class="modal-dialog dialogPosition">
+            <!-- Modal content-->
+            <div class="modal-content" style="background-color: aliceblue">
+                <div class="modal-header" style="text-align: center">
+                    <h3><b>Update Infromation</b></h3>
+                </div>
+                <div class="modal-body modalBodyPadding">
+                    <!-- Form for Taking Details -->
+
+                    <div class="form-group ">
+                        <label for="fName">Fisrt Name:</label>
+                        @Html.TextBox("txtFirstName","" , new { @class = "form-control inputMaxWidth" })
+                    </div>
+
+                    <div class="form-group ">
+                        <label for="lName">Last Name:</label>
+                        @Html.TextBox("txtLastName", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                    <div class="form-group ">
+                        <label for="address">Address:</label>
+                        @Html.TextBox("txtAddress", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                    <div class="form-group ">
+                        <label for="contactNumber">Contact Number:</label>
+                        @Html.TextBox("txtContact", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" value="Update" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!--Update Password-->
+@using (Html.BeginForm("UpdateUserPassword", "Profile", FormMethod.Post))
+{
+    <div class="modal fade" style="display:none" id="updatePasswordModal" role="dialog">
+        <div class="modal-dialog dialogPosition">
+            <!-- Modal content-->
+            <div class="modal-content" style="background-color: aliceblue">
+                <div class="modal-header" style="text-align: center">
+                    <h3 class="modal-title"><b>Update Password</b></h3>
+                </div>
+                <div class="modal-body modalBodyPadding">
+                    <div class="form-group ">
+                        <label for="password">Privious Password:</label>
+                        @Html.TextBox("txtPassword", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                    <div class="form-group ">
+                        <label for="password">New Password:</label>
+                        @Html.TextBox("txtNewPassword", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                    <div class="form-group ">
+                        <label for="confirmPassword">Confirm Password:</label>
+                        @Html.TextBox("txtConfirmPassword", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" value="Upadte" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!--Profile picture upload-->
+<div class="modal fade" style="display:none" id="updateProfileModal" role="dialog">
+    <div class="modal-dialog dialogPosition">
+        <!-- Modal content-->
+        <div class="modal-content" style="background-color: aliceblue">
+            <div class="modal-header" style="text-align: center">
+                <h3 class="modal-title"><b>Update Profile</b></h3>
+            </div>
+            
+@using (Html.BeginForm("UpdateUserProfile", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="modal-body modalBodyPaddings">
+        <div class="form-group inputMaxWidth">
+            @Html.TextBox("file", "", new { type = "file" })
+        </div>
+    </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input type="submit" value="Update" class="btn btn-primary" />
+            </div>
+}
+        </div>
+    </div>
+</div>

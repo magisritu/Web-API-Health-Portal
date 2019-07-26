@@ -1,0 +1,320 @@
+﻿@{ 
+    var grid = new WebGrid(Model, canPage: true, rowsPerPage: 5);
+}
+
+    <style type="text/css">
+        .webgrid td {
+            border: 1px solid #E8EEF4;
+            background-color: White;
+            padding-right:5%;
+        }
+
+        .webgrid {
+            border-collapse: collapse;
+        }
+
+        .colRowButton {
+            width: 70px;
+            text-align: left;
+        }
+
+        .webgrid a {
+            color: #fff;
+        }
+
+        .webgrid-header td {
+            padding: 0px 5px;
+            text-align: center;
+            height: 50px;
+        }
+
+        .webgrid-header th {
+            background-color: #333333;
+            margin-bottom: 2px;
+            height:40px;
+        }
+
+        .webgrid-footer td {
+            padding: 6px 5px;
+            text-align: left;
+            color: #000;
+            background-color: #F9F9F9;
+            height: 20px;
+            border: 1px solid #dfdada;
+        }
+
+            .webgrid-footer td a {
+                padding: 6px 5px;
+                text-align: left;
+                color: #000;
+                background-color: #F9F9F9;
+                height: 20px;
+            }
+
+        .webgrid-alternating-row td {
+            height: 70px;
+            background-color: #f9f9f9;
+            padding-right: 8% !important;
+        }
+        .webgrid-table{
+            width:100% !important;
+        }
+        .webgrid-row-style {
+            height: 70px;
+            border-bottom: 1px solid #E8EEF4;
+        }
+
+        .webgrid-selected-row {
+            font-weight: bold;
+        }
+    </style>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript">
+        var sessionObjectForTesting;
+        $(document).ready(function () {
+            var hospitalID;
+            ////Calling Ajax To show Details
+            $.ajax({
+                url: '/Hospital/Index/',
+                data: "",
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    //alert(data);
+                }
+            });
+
+            $(".editUser").on("click", function () {
+                $('#hospitalDataUpdate').modal('show');
+                            var curRow = $(this).closest('tr');
+                            hospitalID = curRow.find('td:eq(0)').text();
+                 $('#txtHospitalName').val(curRow.find('td:eq(1)').text());
+                 $('#txtAddress').val(curRow.find('td:eq(2)').text());
+                 $('#txtEmail').val(curRow.find('td:eq(3)').text());
+                 $('#txtContact1').val(curRow.find('td:eq(4)').text());
+                 $('#txtContact2').val(curRow.find('td:eq(5)').text());
+                 $('#ddlPrimaryMark').val("");
+                 $('#ddlPrimaryMark').val(curRow.find('td:eq(6)').text());
+                        });
+
+            $('#btnUpdate').on('click', function () {
+                            var hospitalModel =
+                                {
+                        "HospitalID": hospitalID,
+                        "HospitalName": $('#txtHospitalName').val(),
+                        "Address": $('#txtAddress').val(),
+                        "EmailID": $('#txtEmail').val(),
+                        "Contact1": parseInt($('#txtContact1').val(),10),
+                        "Contact2": parseInt($('#txtContact2').val(),10),
+                        "PrimaryMark": $('#ddlPrimaryMark').val(),
+                        "UserID": parseInt(@Session["userID"].ToString())
+                    };
+                $.ajax({
+                            url: '/Hospital/UpdateHospital/',
+                    data: JSON.stringify(hospitalModel),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                                //alert(data);
+                            }
+                        });
+
+            });
+        });
+    </script>
+
+<link href="~/Hospital.css" rel="stylesheet" />
+<input type="button" class="btn btn-primary" value="Add Hospital" id="btnAddNewHospital" data-toggle="modal" data-target="#addHospitalData" />
+<div id="gridContent" style=" padding:2px;" >
+    
+    @{new System.Web.Script.Serialization.JavaScriptSerializer().Serialize((ModelLibrary.UserDetailsModel)Session["userModel"]);}
+    @grid.GetHtml(
+
+        tableStyle: "webgrid-table",
+
+        headerStyle: "webgrid-header",
+
+        footerStyle: "webgrid-footer",
+
+        
+
+        alternatingRowStyle: "webgrid-alternating-row",
+
+        selectedRowStyle: "webgrid-selected-row",
+
+        rowStyle: "webgrid-row-style",
+        
+
+        mode: WebGridPagerModes.All,
+
+        firstText: "<< First",
+        
+        previousText: "< Prev",
+        
+        nextText: "Next >",
+        
+        lastText: "Last >>",
+
+        columns:
+
+            grid.Columns(
+
+             grid.Column("HospitalID", format: @<text> @item.HospitalID </text>,style: "col1Width" ),
+
+             grid.Column("Name", "Name", format: @<text>  <span  class="display-mode"> <label id="hospitalName"  >@item.HospitalName</label> </span></text>, style: "padding-right:5%"),
+
+             grid.Column("Address", "Address", format: @<text> <span  class="display-mode"> <label id="address">@item.Address</label> </span></text>, style: "padding-right:5%"),
+
+            grid.Column("EmailID", "EmailID", format: @<text> <span class="display-mode"> <label id="emailId">@item.EmailID</label> </span></text>, style: "col2Width"),
+
+            grid.Column("Contact1", "Contact1", format: @<text> <span class="display-mode"> <label id="contact1">@item.Contact1</label> </span></text>, style: "col2Width"),
+
+            grid.Column("Contact2", "Contact2", format: @<text> <span class="display-mode"> <label id="contact2">@item.Contact2</label> </span></text>, style: "col2Width"),
+
+            grid.Column("PrimaryMark", "PrimaryMark", format: @<text> <span class="display-mode"> <label id="primaryMark">@item.PrimaryMark</label> </span></text>, style: "col2Width"),
+            
+            
+             grid.Column("Action", format: @<text>
+
+                                <button class="glyphicon-edit display-mode editUser" >Edit</button>
+                            </text>, style: "col3Width", canSort: false),
+            grid.Column("Delete", format: @<text>
+
+                                    <button class="danger display-mode deleteUser">Delete</button>
+            </text>, style: "col3Width", canSort: false)
+    ))
+
+</div>
+
+
+
+    <div class="modal fade" style="display:none" id="hospitalDataUpdate" role="dialog">
+        <div class="modal-dialog dialogPosition">
+            <!-- Modal content-->
+            <div class="modal-content" style="background-color: aliceblue">
+                <div class="modal-header" style="text-align: center">
+                    <h3><b>Hospital Infromation</b></h3>
+                </div>
+                <div class="modal-body modalBodyPadding">
+                    <!-- Form for Taking Details -->
+
+                    <div class="form-group ">
+                        <label for="fName">Hospital Name:</label>
+                        @Html.TextBox("txtHospitalName", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+
+                    <div class="form-group ">
+                        <label for="lName">Address:</label>
+                        @Html.TextBox("txtAddress", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                    <div class="form-group ">
+                        <label for="address">Email:</label>
+                        @Html.TextBox("txtEmail", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                    <div class="form-group ">
+                        <label for="primaryNumber">Primary Contact:</label>
+                        @Html.TextBox("txtContact1", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                    <div class="form-group ">
+                        <label for="contactNumber">Secondary Contact:</label>
+                        @Html.TextBox("txtContact2", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                    <div class="form-group ">
+                        <label for="primaryMark">Primary Mark:</label>
+                        @Html.DropDownList("ddlPrimaryMark",new List<SelectListItem>
+                        {
+                        new SelectListItem{Text = "--select primary mark--",Value=""},
+                        new SelectListItem {Text = "Yes", Value="Yes"  },
+                        new SelectListItem {Text = "No", Value="No" }
+                        },new {@class = "form-control inputMaxWidth" })
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" id="btnUpdate" value="Update" data-dismiss="modal" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Hospital Details-->
+@using (Html.BeginForm("NewHospitalDetails", "Hospital", FormMethod.Post))
+{
+    <div class="modal fade" style="display:none" id="addHospitalData" role="dialog">
+        <div class="modal-dialog dialogPosition">
+            <!-- Modal content-->
+            <div class="modal-content" style="background-color: aliceblue">
+                <div class="modal-header" style="text-align: center">
+                    <h3><b>New Hospital Details</b></h3>
+                </div>
+                <div class="modal-body modalBodyPadding">
+                    <!-- Form for Taking Details -->
+                    <div class="form-group ">
+                        <label for="fName">Hospital ID:</label>
+                        @Html.TextBox("txtHospitalID", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+
+                    <div class="form-group ">
+                        <label for="fName">Hospital Name:</label>
+                        @Html.TextBox("txtHospitalName", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+
+                    <div class="form-group ">
+                        <label for="lName">Address:</label>
+                        @Html.TextBox("txtAddress", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                    <div class="form-group ">
+                        <label for="address">Email:</label>
+                        @Html.TextBox("txtEmail", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                    <div class="form-group ">
+                        <label for="primaryNumber">Primary Contact:</label>
+                        @Html.TextBox("txtContact1", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                    <div class="form-group ">
+                        <label for="contactNumber">Secondary Contact:</label>
+                        @Html.TextBox("txtContact2", "", new { @class = "form-control inputMaxWidth" })
+                    </div>
+                    <div class="form-group ">
+                        <label for="contactNumber">Primary Mark:</label>
+                        @Html.DropDownList("ddlPrimaryMark", new List<SelectListItem>
+                        {
+                        new SelectListItem{Text = "--select primary mark--",Value=""},
+                        new SelectListItem {Text = "Yes", Value="Yes"  },
+                        new SelectListItem {Text = "No", Value="No" }
+                        }, new { @class = "form-control inputMaxWidth" })
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" value="Add News" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    /*
+        $(document).ready(function () {
+            alert("Ready");
+            $(".webgrid-table").find('tr').each(function (i, el) {
+                var tds = $(this).find('td');
+                if (tds.eq(6).text() == "Yes") {
+                    alert("Find");
+                    tds.eq(6).parent().css("background-color", "#38acff");
+                }
+            });
+            $(".webgrid-table").find('tr').each(function (i, el) {
+                var tds = $(this).find('td');
+                tds.eq(6).css("display", "none");
+            });
+            $('th:eq(6)', this).css('display', 'none');
+        });
+    */
+</script>

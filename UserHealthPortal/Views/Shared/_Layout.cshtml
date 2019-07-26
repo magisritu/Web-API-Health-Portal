@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/layoutCss.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    
+    <script>
+        //$(document).ready(function () {
+            //$.ajax({
+            //    //url: '/Hospital/UpdateHospital/',
+            //    //data: JSON.stringify(userID),
+            //    type: 'POST',
+            //    contentType: 'application/json; charset=utf-8',
+            //    success: function (data) {
+            //        //alert(data);
+            //    }
+            //});
+        //});
+    </script>
+    <style>
+        .sticky {
+            position: fixed;
+            top: 0;
+            bottom:5px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav  class="navbar navbar-default" style="height:80px">
+        <div id="navbar" class="container-fluid innerDiv">
+            <ul class="nav navbar-nav">
+                <li class="liStyle"><a href="~/MainPage/UserDashBoard">Profile</a></li>
+                <li class="liStyle"><a href="~/Hospital/Index">Hospital</a></li>
+                <li class="liStyle"><a href="~/Doctor/Index">Doctor</a></li>
+                <li class="liStyle"><a href="~/Report/ShowReport">Report</a></li>
+                <li class="liStyle" style=""><a href="~/MainPage/LogOut">Logout</a></li>
+                <li id="imageItem" style="position:absolute;left:94.5%"><img src="@Session["imgURL"]" , item.ModelImagePath))" style="border-radius:50px;width:65px;height:70px" /></li>
+            </ul>
+        </div>
+    </nav>
+    <script>
+        window.onscroll = function () {
+            myFunction();
+        };
+        var navbar = document.getElementById("navbar");
+        var sticky = navbar.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {
+                navbar.classList.add("sticky");
+            }
+            else {
+                navbar.classList.remove("sticky");
+            }
+        }
+    </script>
+
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer style="text-align:center">
+            <p>&copy; @DateTime.Now - Health Portal</p>
+        </footer>
+    </div>
+
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+    @RenderSection("customscripts", false)
+</body>
+</html>
